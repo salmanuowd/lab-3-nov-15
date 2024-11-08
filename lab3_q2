@@ -1,0 +1,38 @@
+#include <stdio.h>
+#define MAX_TRANSACTIONS 7
+#define MAX_TO_BE_PROCESSED 7
+void process_transactions(int transactions[], int count);
+
+int main() {
+    int transactions[MAX_TRANSACTIONS] = {200, -150, -500, -400, -50, -200, 300};
+    process_transactions(transactions, MAX_TRANSACTIONS);
+    return 0;
+}
+void process_transactions(int transactions[], int count) {
+    int balance = 1000;  
+    int tobeprocessed[MAX_TO_BE_PROCESSED];  
+    int tobeprocessed_count = 0;
+    for (int i = 0; i < count; i++) {
+        int transaction = transactions[i];
+        if (transaction < 0 && balance + transaction < 0) {
+            printf("Transaction %d of %d is invalid (insufficient balance). Skip\n", i + 1, transaction);
+            tobeprocessed[tobeprocessed_count++] = transaction;
+            continue;
+        }
+        balance += transaction;
+        printf("Transaction %d: %d, Updated Balance: %d\n", i + 1, transaction, balance);
+        if (balance == 0) {
+            printf("Balance is zero. Stopping further processing.\n");
+            for (int j = i + 1; j < count; j++) {
+                tobeprocessed[tobeprocessed_count++] = transactions[j];
+            }
+            break;
+        }
+    }
+    printf("Final Balance: %d\n", balance);
+    printf("Unprocessed Transactions: ");
+    for (int i = 0; i < tobeprocessed_count; i++) {
+        printf("%d ", tobeprocessed[i]);
+    }
+    printf("\n");
+}
